@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FAE</string>
+    <string name="encyklopedia">Encyklopedia</string>
+    <string name="zegar">Zegar</string>
+    <string name="szukaj">szukaj</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

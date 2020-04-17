@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "321734489207",
+    "firebase_url": "https://firstaidencyclopedia.firebaseio.com",
+    "project_id": "firstaidencyclopedia",
+    "storage_bucket": "firstaidencyclopedia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321734489207:android:8e620a6f74b88e2b1e0272",
+        "android_client_info": {
+          "package_name": "com.example.fae"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321734489207-sppom7581goospgj6jd0qscqq8l06n4m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZHGWKphZbt1i3nCT6kRFM-jgWidDwiPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321734489207-sppom7581goospgj6jd0qscqq8l06n4m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
