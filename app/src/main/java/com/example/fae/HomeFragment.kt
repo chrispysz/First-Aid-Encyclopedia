@@ -1,11 +1,21 @@
 package com.example.fae
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import kotlinx.android.synthetic.main.example_item.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
@@ -13,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
  */
 class HomeFragment : Fragment() {
 
+    private var adapter: ItemFirestoreRecyclerAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,22 +33,48 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val exampleList=generateDummyList(500)
-        recycler_view.adapter=ExampleAdapter(exampleList)
         recycler_view.layoutManager=LinearLayoutManager(activity)
+        val rootRef = FirebaseFirestore.getInstance()
+        val query = rootRef.collection("zdarzenia").orderBy("text1", Query.Direction.ASCENDING)
+        val options = FirestoreRecyclerOptions.Builder<ExampleItem>().setQuery(query, ExampleItem::class.java).build()
+        adapter=ItemFirestoreRecyclerAdapter(options)
+        recycler_view.adapter=adapter
     }
-    private fun generateDummyList(size: Int): List<ExampleItem>{
-        val list=ArrayList<ExampleItem>()
-        for (i in 0 until size){
-            val drawable = when (i%3){
-                0 -> R.drawable.ic_settings_input_antenna_black_24dp
-                1 -> R.drawable.ic_subway_black_24dp
-                else -> R.drawable.ic_thumb_up_black_24dp
-            }
-            val item=ExampleItem(drawable, "Item $i","Line 2")
-            list+=item
+
+    private inner class ExampleViewHolder internal constructor(private val view: View) : RecyclerView.ViewHolder(view) {
+        internal fun setText(text1: String,text2: String) {
+            val textView1 = view.findViewById<TextView>(R.id.text_view1)
+            val textView2 = view.findViewById<TextView>(R.id.text_view2)
+            textView1.text = text1
+            textView2.text = text2
+
         }
-        return list
+    }
+
+    private inner class ItemFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<ExampleItem>) : FirestoreRecyclerAdapter<ExampleItem, ExampleViewHolder>(options) {
+        override fun onBindViewHolder(ExampleViewHolder: ExampleViewHolder, position: Int, ExampleItem: ExampleItem) {
+            ExampleViewHolder.setText(ExampleItem.text1,ExampleItem.text2)
+
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.example_item, parent, false)
+            return ExampleViewHolder(view)
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        adapter!!.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (adapter != null) {
+            adapter!!.stopListening()
+        }
     }
 
 
