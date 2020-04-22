@@ -40,7 +40,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.1'
-
+    implementation 'net.theluckycoder.expandablecardview:expandablecardview:1.2.0'
     implementation "androidx.multidex:multidex:2.0.1"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
