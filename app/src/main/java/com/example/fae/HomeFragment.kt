@@ -1,34 +1,29 @@
 package com.example.fae
 
-import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.android.synthetic.main.example_item.*
-import kotlinx.android.synthetic.main.example_item.view.*
-import kotlinx.android.synthetic.main.example_item.view.card
 import kotlinx.android.synthetic.main.fragment_home.*
 import net.theluckycoder.expandablecardview.ExpandableCardView
-import java.util.Locale.filter
+import androidx.appcompat.widget.SearchView
+import java.util.*
 
 /**
- * A simple [Fragment] subclass.
+ * Home/Encyclopedia class with FirestoreAdapter and Filter
  */
 class HomeFragment : Fragment() {
+    val titles = ArrayList<String>()
+    val descriptions = ArrayList<String>()
+    var titlesFiltered = ArrayList<String>()
     private var adapter: ItemFirestoreRecyclerAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,39 +40,35 @@ class HomeFragment : Fragment() {
         val options =
             FirestoreRecyclerOptions.Builder<ExampleItem>().setQuery(query, ExampleItem::class.java)
                 .build()
+
+        rootRef.collection("zdarzenia").get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                for (item in task.result!!) {
+                    val title = item.data["text1"].toString()
+                    val description = item.data["text2"].toString()
+                    titles.add(title)
+                    descriptions.add(description)
+                }
+            }
+        }
         adapter = ItemFirestoreRecyclerAdapter(options)
         recycler_view.adapter = adapter
+
+
+        item_search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                    adapter!!.filter.filter(newText)
+                return false
+            }
+
+        })
     }
 
 
-    private inner class ExampleViewHolder internal constructor(private val view: View) :
-        RecyclerView.ViewHolder(view) {
-        internal fun setText(text1: String, text2: String) {
-            val card = view.findViewById<ExpandableCardView>(R.id.card)
-            card!!.cardTitle = text1
-            card.cardDescription = text2
-        }
-    }
-
-    private inner class ItemFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<ExampleItem>) :
-        FirestoreRecyclerAdapter<ExampleItem, ExampleViewHolder>(options) {
-        override fun onBindViewHolder(
-            ExampleViewHolder: ExampleViewHolder,
-            position: Int,
-            ExampleItem: ExampleItem
-        ) {
-            ExampleViewHolder.setText(ExampleItem.text1, ExampleItem.text2)
-
-
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
-            val view =
-                LayoutInflater.from(parent.context).inflate(R.layout.example_item, parent, false)
-            return ExampleViewHolder(view)
-        }
-
-    }
 
     override fun onStart() {
         super.onStart()
@@ -91,5 +82,65 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private inner class ExampleViewHolder(private val view: View) :
+        RecyclerView.ViewHolder(view) {
+        internal fun setText(text1: String,text2: String) {
+            val card = view.findViewById<ExpandableCardView>(R.id.card)
+                card.cardTitle = titlesFiltered[position]
+                card.cardDescription = descriptions[position]
+        }
+    }
 
+    private inner class ItemFirestoreRecyclerAdapter(options: FirestoreRecyclerOptions<ExampleItem>) :
+        FirestoreRecyclerAdapter<ExampleItem, ExampleViewHolder>(options), Filterable {
+
+
+        override fun onBindViewHolder(
+            ExampleViewHolder: ExampleViewHolder,
+            position: Int,
+            ExampleItem: ExampleItem
+        ) {
+                ExampleViewHolder.setText(ExampleItem.text1,ExampleItem.text2)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
+            val view =
+                LayoutInflater.from(parent.context).inflate(R.layout.example_item, parent, false)
+            return ExampleViewHolder(view)
+        }
+
+        override fun getFilter(): Filter {
+            return object : Filter() {
+                override fun performFiltering(constraint: CharSequence?): FilterResults {
+                    val charSearch = constraint.toString()
+                    if (charSearch.isEmpty()) {
+                        titlesFiltered = titles
+                    } else {
+                        val resultList = ArrayList<String>()
+                        for (row in titles) {
+                            if (row.toLowerCase(Locale.ROOT).contains(charSearch.toLowerCase(Locale.ROOT))) {
+                                resultList.add(row)
+                            }
+                        }
+                        titlesFiltered = resultList
+                    }
+                    val filterResults = FilterResults()
+                    filterResults.values = titlesFiltered
+                    return filterResults
+                }
+
+                @Suppress("UNCHECKED_CAST")
+                override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                    titlesFiltered = results?.values as ArrayList<String>
+                    notifyDataSetChanged()
+                }
+
+            }
+
+        }
+
+        override fun getItemCount(): Int {
+            return titlesFiltered.size
+        }
+    }
 }
