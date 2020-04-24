@@ -1,5 +1,6 @@
 package com.example.fae
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ class HomeFragment : Fragment() {
     val descriptions = ArrayList<String>()
     var titlesFiltered = ArrayList<String>()
     private var adapter: ItemFirestoreRecyclerAdapter? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,7 +42,8 @@ class HomeFragment : Fragment() {
         val options =
             FirestoreRecyclerOptions.Builder<ExampleItem>().setQuery(query, ExampleItem::class.java)
                 .build()
-
+        adapter = ItemFirestoreRecyclerAdapter(options)
+        recycler_view.adapter = adapter
         rootRef.collection("zdarzenia").get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 for (item in task.result!!) {
@@ -49,10 +52,12 @@ class HomeFragment : Fragment() {
                     titles.add(title)
                     descriptions.add(description)
                 }
+                titlesFiltered=titles
             }
+            adapter?.startListening()
         }
-        adapter = ItemFirestoreRecyclerAdapter(options)
-        recycler_view.adapter = adapter
+
+
 
 
         item_search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
@@ -69,12 +74,6 @@ class HomeFragment : Fragment() {
     }
 
 
-
-    override fun onStart() {
-        super.onStart()
-        adapter!!.startListening()
-    }
-
     override fun onStop() {
         super.onStop()
         if (adapter != null) {
@@ -84,7 +83,7 @@ class HomeFragment : Fragment() {
 
     private inner class ExampleViewHolder(private val view: View) :
         RecyclerView.ViewHolder(view) {
-        internal fun setText(text1: String,text2: String) {
+        internal fun setText() {
             val card = view.findViewById<ExpandableCardView>(R.id.card)
                 card.cardTitle = titlesFiltered[position]
                 card.cardDescription = descriptions[position]
@@ -100,7 +99,7 @@ class HomeFragment : Fragment() {
             position: Int,
             ExampleItem: ExampleItem
         ) {
-                ExampleViewHolder.setText(ExampleItem.text1,ExampleItem.text2)
+                ExampleViewHolder.setText()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
@@ -143,4 +142,5 @@ class HomeFragment : Fragment() {
             return titlesFiltered.size
         }
     }
+
 }

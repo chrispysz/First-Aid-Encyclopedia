@@ -14,7 +14,8 @@
         android:background="@color/colorPrimary"
         android:textCursorDrawable="@null"
         app:iconifiedByDefault="false"
-        app:queryBackground="@null" />
+        app:queryBackground="@null"
+        android:backgroundTint="@color/cardview_light_background"/>
 
 <androidx.recyclerview.widget.RecyclerView
     android:layout_width="match_parent"
