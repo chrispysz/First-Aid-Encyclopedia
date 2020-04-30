@@ -5,5 +5,4 @@ Finished:
 -Expandable cards in a RecyclerViewer (Encyclopedia Items)
 -Resuscitation timer
 Todo:
--Search filter
 -Phone numbers with Phone App integration
