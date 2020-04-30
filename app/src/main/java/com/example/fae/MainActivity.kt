@@ -2,7 +2,6 @@ package com.example.fae
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.appcompat.widget.Toolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.menu_search -> {
-                val fragment = SearchFragment()
+                val fragment = PhoneFragment()
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment)
