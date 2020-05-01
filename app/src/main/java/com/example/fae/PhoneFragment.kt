@@ -9,17 +9,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.example_number.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
-/**
- * A simple [Fragment] subclass.
- */
+
 class PhoneFragment : Fragment() {
-    protected lateinit var rootView: View
+    lateinit var rootView: View
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: ListAdapter
 
@@ -62,15 +64,11 @@ class PhoneFragment : Fragment() {
 
     private fun setUpDummyData() {
         val list: ArrayList<ExampleNumber> = ArrayList()
-        list.add(ExampleNumber("606798166", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("User 2", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("User 3", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("User 4", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("User 5", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("User 6", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("User 7", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("User 8", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("User 9", R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Alarmowy (ogólnoeuropejski)","112", R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Pogotowie","999", R.drawable.ic_local_hospital_black_24dp))
+        list.add(ExampleNumber("Straż pożarna","998", R.drawable.ic_whatshot_black_24dp))
+        list.add(ExampleNumber("Policja","997", R.drawable.ic_local_taxi_black_24dp))
+
         adapter.addItems(list)
     }
 
@@ -86,9 +84,9 @@ class PhoneFragment : Fragment() {
 
 
     abstract class BaseRecyclerViewAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-        private var list: ArrayList<T>? = ArrayList<T>()
+        private var list: ArrayList<T>? = ArrayList()
         protected var itemClickListener: OnItemClickListener? = null
+
 
         fun addItems(items: ArrayList<T>) {
             this.list?.addAll(items)
@@ -113,10 +111,12 @@ class PhoneFragment : Fragment() {
         private fun reload() {
             Handler(Looper.getMainLooper()).post { notifyDataSetChanged() }
         }
+
     }
 
 
-    class ListAdapter : BaseRecyclerViewAdapter<ExampleNumber>() {
+    class ListAdapter : BaseRecyclerViewAdapter<ExampleNumber>(){
+
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return MyViewHolder(
@@ -132,7 +132,8 @@ class PhoneFragment : Fragment() {
         inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
             private val imageView: ImageView = view.image_view
-            private val textView: TextView = view.text_view
+            private val description: TextView = view.description
+            private val number: TextView = view.number
 
             init {
                 view.setOnClickListener(this)
@@ -140,7 +141,8 @@ class PhoneFragment : Fragment() {
 
             fun setUpView(ExampleNumber: ExampleNumber?) {
                 ExampleNumber?.resId?.let { imageView.setImageResource(it) }
-                textView.text = ExampleNumber?.number
+                description.text = ExampleNumber?.description
+                number.text = ExampleNumber?.number
             }
 
             override fun onClick(v: View?) {
