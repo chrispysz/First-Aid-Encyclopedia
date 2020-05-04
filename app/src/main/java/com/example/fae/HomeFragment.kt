@@ -33,7 +33,6 @@ class HomeFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recycler_view.layoutManager = LinearLayoutManager(activity)
@@ -47,8 +46,8 @@ class HomeFragment : Fragment() {
         rootRef.collection("zdarzenia").get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 for (item in task.result!!) {
-                    val title = item.data["text1"].toString()
-                    val description = item.data["text2"].toString()
+                    val title = item.data["text1"].toString().replace("\\n","\n")
+                    val description = item.data["text2"].toString().replace("\\n","\n")
                     titles.add(title)
                     descriptions.add(description)
                 }
@@ -87,6 +86,7 @@ class HomeFragment : Fragment() {
             val card = view.findViewById<ExpandableCardView>(R.id.card)
                 card.cardTitle = titlesFiltered[position]
                 card.cardDescription = descriptions[position]
+
         }
     }
 
