@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.content_timer.*
 import kotlinx.android.synthetic.main.fragment_timer.*
+import kotlin.math.roundToInt
 
 
 /**
@@ -56,10 +57,10 @@ class TimerFragment : Fragment() {
 
 
 
-    private val countDownTimer = object : CountDownTimer(30000, 1000) {
+    private val countDownTimer = object : CountDownTimer(30000, 100) {
         override fun onTick(millisUntilFinished: Long) {
-            i++
-            Progress.progress = (i / 30 * 100).toInt()
+            i+=0.1F
+            Progress.progress = (i / 30 * 100).roundToInt()
             textView_countdown.text = "${millisUntilFinished / 1000}s"
         }
 
@@ -81,7 +82,7 @@ class TimerFragment : Fragment() {
         override fun onFinish() {
         }
     }
-    private val countDownTimer3 = object : CountDownTimer(10000, 1000) {
+    private val countDownTimer3 = object : CountDownTimer(10000, 100) {
         override fun onTick(millisUntilFinished: Long) {
             Progress.progress = (100 * (10000 - millisUntilFinished) / 10000).toInt()
         }
@@ -112,7 +113,7 @@ class TimerFragment : Fragment() {
 
     private fun createSoundPool() {
         soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            var audioAttributes: AudioAttributes = AudioAttributes.Builder()
+            val audioAttributes: AudioAttributes = AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .setUsage(AudioAttributes.USAGE_GAME).build()
             SoundPool.Builder()

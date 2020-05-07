@@ -112,8 +112,8 @@ class HomeFragment : Fragment() {
             return object : Filter() {
                 override fun performFiltering(constraint: CharSequence?): FilterResults {
                     val charSearch = constraint.toString()
-                    if (charSearch.isEmpty()) {
-                        titlesFiltered = titles
+                    titlesFiltered = if (charSearch.isEmpty()) {
+                        titles
                     } else {
                         val resultList = ArrayList<String>()
                         for (row in titles) {
@@ -121,7 +121,7 @@ class HomeFragment : Fragment() {
                                 resultList.add(row)
                             }
                         }
-                        titlesFiltered = resultList
+                        resultList
                     }
                     val filterResults = FilterResults()
                     filterResults.values = titlesFiltered
