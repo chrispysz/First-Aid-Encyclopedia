@@ -64,10 +64,36 @@ class PhoneFragment : Fragment() {
 
     private fun setUpDummyData() {
         val list: ArrayList<ExampleNumber> = ArrayList()
-        list.add(ExampleNumber("Alarmowy (ogólnoeuropejski)","112", R.drawable.ic_local_phone_black_24dp))
-        list.add(ExampleNumber("Pogotowie","999", R.drawable.ic_local_hospital_black_24dp))
-        list.add(ExampleNumber("Straż pożarna","998", R.drawable.ic_whatshot_black_24dp))
-        list.add(ExampleNumber("Policja","997", R.drawable.ic_local_taxi_black_24dp))
+        list.add(ExampleNumber("Alarmowy (ogólnoeuropejski)","112"
+            , R.drawable.ic_warning_black_24dp))
+        list.add(ExampleNumber("Pogotowie","999"
+            , R.drawable.ic_local_hospital_black_24dp))
+        list.add(ExampleNumber("Straż pożarna","998"
+            , R.drawable.ic_whatshot_black_24dp))
+        list.add(ExampleNumber("Policja","997"
+            , R.drawable.ic_local_taxi_black_24dp))
+        list.add(ExampleNumber("Centrum Antyterrorystyczne (ABW)","996"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Komendant Główny Policji - system Child Alert","995"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Pogotowie Wodociągów i Kanalizacji","994"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Pogotowie Ciepłownicze","993"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Pogotowie Gazowe","992"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Pogotowie Energetyczne","991"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("numer informacyjno-koordynacyjny na potrzeby centrum zarządzania kryzysowego","987"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Straż Miejska","986"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Ratownictwo morskie i górskie (WOPR, GOPR i TOPR)","985"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Pogotowie Rzeczne (MOPR)","984"
+            , R.drawable.ic_local_phone_black_24dp))
+        list.add(ExampleNumber("Pogotowie Drogowe","981"
+            , R.drawable.ic_local_phone_black_24dp))
 
         adapter.addItems(list)
     }
