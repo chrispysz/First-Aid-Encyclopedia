@@ -6,6 +6,7 @@ Multifunctional Android app using Firestore database written in Kotlin .
 
 
 - Timer Fragment: CountDownTimer with sound assistance
+
 ![](rko.gif)
 
 
